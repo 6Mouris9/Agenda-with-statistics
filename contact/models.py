@@ -9,4 +9,6 @@ class Contact(models.Model):
     created_date = models.DateField(default=timezone.now)
     description = models.TextField(blank=True)
 
-
+    def __str__(self):
+        return f'{self.first_name}  {self.last_name}'
+    
