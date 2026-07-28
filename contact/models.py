@@ -3,6 +3,11 @@ from django.utils import timezone
 # Create your models here.
 
 class Category(models.Model):
+    # A classe meta vira um metadado da nossa categoria
+    class Meta:
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categories'
+
     name = models.CharField(max_length=20,)
 
     def __str__(self) -> str:

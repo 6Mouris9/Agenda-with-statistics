@@ -24,3 +24,4 @@ urlpatterns = [
     path('contact/', include('contact.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) #Configuracao para acessar as imagens em uma aba
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
