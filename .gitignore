@@ -142,3 +142,4 @@ GitHub.sublime-settings
 # --------------------
 staticfiles/
 media/
+project/local_settings.py

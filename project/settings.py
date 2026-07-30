@@ -129,3 +129,10 @@ STATICFILES_DIRS = (
 # Medias config
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Enviroment Variables
+try:
+    from project.local_settings import *
+except ImportError as i:
+    ...
+    
