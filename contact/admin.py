@@ -4,11 +4,12 @@ from contact import models
 
 @admin.register(models.Contact)
 class ContactAdmin(admin.ModelAdmin):
-    list_display = 'id', 'first_name', 'phone', 'category',
+    list_display = 'id', 'first_name', 'last_name', 'phone', 'category', 'show',
     ordering = '-id',
 
     search_fields = 'id' ,'first_name', 
-    list_display_links = 'id', 'first_name',
+    list_display_links = 'id',
+    list_editable = 'first_name', 'last_name', 'phone', 'category', 'show',
 
 @admin.register(models.Category)
 class Category(admin.ModelAdmin):
