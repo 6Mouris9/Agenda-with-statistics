@@ -33,7 +33,7 @@ def contact(request, contact_id):
         )
 
 def search(request: HttpRequest):
-    search_value = request.GET.get('q','')
+    search_value = request.GET.get('q','').strip()
 
     contacts = Contact.objects\
             .filter(show=True)\
@@ -48,7 +48,8 @@ def search(request: HttpRequest):
 
     context = {
         "contacts": contacts,
-        'site_title': 'Contatos - '
+        'site_title': 'Contatos - ',
+        "search_value": search_value,
     }
 
     return render(
