@@ -3,15 +3,13 @@
 <html lang="en">
 <head>
     {% include "partials/_head.html" %}
-    <title>Titulo global</title>
+    <title>{% block title %}{% if site_title %}{{ site_title }}{% endif %}Agenda{% endblock title %}</title>
 </head>
 <body>
-    
     {% include "partials/_header.html" %}
     <main class="content">
-    {% block content %}
-        
-    {% endblock content %}
+        {% block content %}
+        {% endblock content %}
     </main>
 </body>
 </html>
