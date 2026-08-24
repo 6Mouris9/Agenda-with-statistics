@@ -1,55 +1,78 @@
+from django.core.paginator import Paginator
 from django.db.models import Q
-from django.http import HttpRequest
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from contact.models import Contact
 
 
 def index(request):
-    contacts = Contact.objects.filter(show=True).order_by('-id')[:10]
+    contacts = Contact.objects \
+        .filter(show=True)\
+        .order_by('-id')
+
+    paginator = Paginator(contacts, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
 
     context = {
-        'contacts': contacts,
-        'site_title': 'Contatos - ',
+        'page_obj': page_obj,
+        'site_title': 'Contatos - '
     }
 
-    return render(request, 'contact/index.html', context=context)
+    return render(
+        request,
+        'contact/index.html',
+        context
+    )
 
 
-def contact(request, contact_id):
-    single_contact = get_object_or_404(Contact, pk=contact_id, show=True)
-
-    context = {
-        'contact': single_contact,
-        'site_title': f'{single_contact.first_name} {single_contact.last_name} - ',
-    }
-
-    return render(request, 'contact/contact.html', context)
-
-
-def search(request: HttpRequest):
+def search(request):
     search_value = request.GET.get('q', '').strip()
 
-    contacts = Contact.objects.filter(show=True)
+    if search_value == '':
+        return redirect('contact:index')
 
-    if search_value:
-        search_terms = search_value.split()
-        query = Q()
+    contacts = Contact.objects \
+        .filter(show=True)\
+        .filter(
+            Q(first_name__icontains=search_value) |
+            Q(last_name__icontains=search_value) |
+            Q(phone__icontains=search_value) |
+            Q(email__icontains=search_value)
+        )\
+        .order_by('-id')
 
-        for term in search_terms:
-            query |= Q(first_name__icontains=term)
-            query |= Q(last_name__icontains=term)
-            query |= Q(phone__icontains=term)
-            query |= Q(email__icontains=term)
-
-        contacts = contacts.filter(query)
-
-    contacts = contacts.order_by('-id')[:10]
+    paginator = Paginator(contacts, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
 
     context = {
-        'contacts': contacts,
-        'site_title': 'Busca - ',
+        'page_obj': page_obj,
+        'site_title': 'Search - ',
         'search_value': search_value,
     }
 
-    return render(request, 'contact/index.html', context)
+    return render(
+        request,
+        'contact/index.html',
+        context
+    )
+
+
+def contact(request, contact_id):
+    # single_contact = Contact.objects.filter(pk=contact_id).first()
+    single_contact = get_object_or_404(
+        Contact, pk=contact_id, show=True
+    )
+    site_title = f'{single_contact.first_name} {single_contact.last_name} - '
+
+    context = {
+        'contact': single_contact,
+        'site_title': site_title
+    }
+
+    return render(
+        request,
+        'contact/contact.html',
+        context
+    )
